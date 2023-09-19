@@ -24,6 +24,28 @@ ON orders.order_id = order_details.order_id
 GROUP BY contact_name
 ORDER BY average DESC
 
+
+-- Exercise 3
+SELECT contact_name, unit_price * quantity * (1 - discount) AS sumOfaUnit
+FROM customers INNER JOIN orders 
+ON customers.customer_id = orders.customer_id
+INNER JOIN order_details
+ON orders.order_id = order_details.order_id
+WHERE contact_name = 'Paul Henriot' AND orders.order_id = 10248
+
+-- Exercise 3
+SELECT contact_name, AVG(sumOfaUnit) AS av
+FROM customers INNER JOIN orders 
+ON customers.customer_id = orders.customer_id
+INNER JOIN  (
+    SELECT order_id, SUM(unit_price * quantity * (1 - discount)) AS sumOfaUnit
+    FROM order_details
+    GROUP BY order_id 
+) order_details ON orders.order_id = order_details.order_id
+GROUP BY contact_name
+ORDER BY av DESC
+-- HAVING contact_name = 'Paul Henriot' 
+
 -- Exercise 4
 SELECT company_name, SUM(quantity * order_details.unit_price * (1 - discount)) AS sum_of_orders
 FROM customers INNER JOIN orders
